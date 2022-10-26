@@ -134,8 +134,8 @@ void VTOL_Takeoff_Safety_Override::Run()
 					_vehicle_angular_velocity_sub.update(&_vehicle_angular_velocity);
 
 					// check if rates are beyond limits
-					_roll_rate_limit_exceeded = fabsf(_vehicle_angular_velocity.xyz[0]) > _param_max_roll_rate.get();
-					_pitch_rate_limit_exceeded =  fabsf(_vehicle_angular_velocity.xyz[1]) > _param_max_pitch_rate.get();
+					_roll_rate_limit_exceeded = fabsf(math::degrees(_vehicle_angular_velocity.xyz[0])) > _param_max_roll_rate.get();
+					_pitch_rate_limit_exceeded =  fabsf(math::degrees(_vehicle_angular_velocity.xyz[1])) > _param_max_pitch_rate.get();
 				}
 				
 				if(AreLimitsExceeded())

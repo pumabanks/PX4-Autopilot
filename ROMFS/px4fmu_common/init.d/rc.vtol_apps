@@ -46,3 +46,6 @@ fw_autotune_attitude_control start vtol
 # Multicopter for now until we have something for VTOL
 #
 land_detector start vtol
+
+# Start task to protect again rollover on takeoff
+vtol_takeoff_safety_override start

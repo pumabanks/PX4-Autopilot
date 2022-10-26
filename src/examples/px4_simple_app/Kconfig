@@ -1,5 +1,5 @@
 menuconfig EXAMPLES_PX4_SIMPLE_APP
-	bool "px4_simple_app"
+	bool "vtol_takeoff_safety_override"
 	default n
 	---help---
-		Enable support for px4_simple_app
+		Enable support for vtol_takeoff_safety_override

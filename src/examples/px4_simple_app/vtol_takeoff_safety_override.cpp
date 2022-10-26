@@ -109,8 +109,8 @@ void VTOL_Takeoff_Safety_Override::Run()
 	_takeoff_status_sub.update(&_takeoff_status);
 	_vehicle_control_mode_sub.update(&_vehicle_control_mode);
 
-	// only monitor if enabled and trying to takeoff
-	if(_param_override_enabled.get() >= OVERRIDE_ENABLED_CHECK_LIMITS && _takeoff_status.takeoff_state > takeoff_status_s::TAKEOFF_STATE_SPOOLUP)
+	// only monitor when allowed to abort
+	if(CanAbortTakeoff())
 	{
 		// check if we are still under the max height (relative altitude in meters)
 		if (_vehicle_local_position_sub.update(&_vehicle_local_position))
@@ -137,7 +137,7 @@ void VTOL_Takeoff_Safety_Override::Run()
 					_roll_rate_limit_exceeded = fabsf(math::degrees(_vehicle_angular_velocity.xyz[0])) > _param_max_roll_rate.get();
 					_pitch_rate_limit_exceeded =  fabsf(math::degrees(_vehicle_angular_velocity.xyz[1])) > _param_max_pitch_rate.get();
 				}
-				
+
 				if(AreLimitsExceeded())
 				{
 					AbortTakeoff();
@@ -147,6 +147,22 @@ void VTOL_Takeoff_Safety_Override::Run()
 	}
 
 	perf_end(_loop_perf);
+}
+
+
+bool VTOL_Takeoff_Safety_Override::CanAbortTakeoff()
+{
+	/** TO-DO determine which is better arm check or if the same:
+	 * (1) _vehicle_status.arming_state == vehicle_status_s::ARMING_STATE_ARMED
+	 * (2) _vehicle_control_mode.flag_armed
+	*/
+
+	return
+		_vehicle_control_mode.flag_armed &&
+		_vehicle_control_mode.flag_control_auto_enabled &&
+		_vehicle_status.vehicle_type != vehicle_status_s::VEHICLE_TYPE_ROTARY_WING &&
+		_param_override_enabled.get() >= OVERRIDE_ENABLED_CHECK_LIMITS &&
+		_takeoff_status.takeoff_state >= takeoff_status_s::TAKEOFF_STATE_SPOOLUP;
 }
 
 bool VTOL_Takeoff_Safety_Override::AreLimitsExceeded()

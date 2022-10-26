@@ -142,6 +142,7 @@ private:
 	void parameters_update(bool force = false);
 
 	// helper functions
+	bool CanAbortTakeoff();
 	bool AreLimitsExceeded();
 	void AbortTakeoff();
 	void NotifyUserOfAbortedTakeoff();

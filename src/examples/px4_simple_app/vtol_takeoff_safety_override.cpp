@@ -165,22 +165,30 @@ void VTOL_Takeoff_Safety_Override::NotifyUserOfAbortedTakeoff()
 {
 	if(_roll_limit_exceeded)
 	{
-		PX4_ERR("Abort Takeoff Required - roll limit exceeded!");
+		const char* message = "Abort Takeoff Required - roll limit exceeded!";
+		mavlink_log_critical(&_mavlink_log_pub, "%s", message);
+		events::send(events::ID("abort_takeoff_required_roll_limit_exceeded"), events::Log::Critical, message);
 	}
 
 	if(_pitch_limit_exceeded)
 	{
-		PX4_ERR("Abort Takeoff Required - pitch limit exceeded!");
+		const char* message = "Abort Takeoff Required - pitch limit exceeded!";
+		mavlink_log_critical(&_mavlink_log_pub, "%s", message);
+		events::send(events::ID("abort_takeoff_required_pitch_limit_exceeded"), events::Log::Critical, message);
 	}
 
 	if(_roll_rate_limit_exceeded)
 	{
-		PX4_ERR("Abort Takeoff Required - roll rate limit exceeded!");
+		const char* message = "Abort Takeoff Required - roll rate limit exceeded!";
+		mavlink_log_critical(&_mavlink_log_pub, "%s", message);
+		events::send(events::ID("abort_takeoff_required_roll_rate_limit_exceeded"), events::Log::Critical, message);
 	}
 
 	if(_pitch_rate_limit_exceeded)
 	{
-		PX4_ERR("Abort Takeoff Required - pitch rate limit exceeded!");
+		const char* message = "Abort Takeoff Required - pitch rate limit exceeded!";
+		mavlink_log_critical(&_mavlink_log_pub, "%s", message);
+		events::send(events::ID("abort_takeoff_required_pitch_rate_limit_exceeded"), events::Log::Critical, message);
 	}
 }
 

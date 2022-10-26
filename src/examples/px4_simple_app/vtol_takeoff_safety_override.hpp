@@ -41,15 +41,19 @@
  * @author Brandon W. Banks <pumabanks@gmail.com>
  */
 
+
+#include <math.h>
 #include <lib/mathlib/mathlib.h>
 #include <lib/parameters/param.h>
 #include <lib/perf/perf_counter.h>
+#include <lib/systemlib/mavlink_log.h>
 #include <matrix/math.hpp>
+
 #include <px4_platform_common/px4_config.h>
 #include <px4_platform_common/defines.h>
+#include <px4_platform_common/events.h>
 #include <px4_platform_common/module.h>
 #include <px4_platform_common/module_params.h>
-#include <math.h>
 
 #include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionCallback.hpp>
@@ -94,6 +98,8 @@ private:
 	bool _roll_rate_limit_exceeded;
 	bool _pitch_rate_limit_exceeded;
 	uint _takeoff_state;
+
+	orb_advert_t _mavlink_log_pub{nullptr};	// mavlink log uORB handle
 
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
 

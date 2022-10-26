@@ -157,7 +157,7 @@ bool VTOL_Takeoff_Safety_Override::AreLimitsExceeded()
 void VTOL_Takeoff_Safety_Override::AbortTakeoff()
 {
 	// handle abort from takeoff here
-
+	SendDisarmCommand();
 	NotifyUserOfAbortedTakeoff();
 }
 
@@ -190,6 +190,25 @@ void VTOL_Takeoff_Safety_Override::NotifyUserOfAbortedTakeoff()
 		mavlink_log_critical(&_mavlink_log_pub, "%s", message);
 		events::send(events::ID("abort_takeoff_required_pitch_rate_limit_exceeded"), events::Log::Critical, message);
 	}
+}
+
+bool VTOL_Takeoff_Safety_Override::SendDisarmCommand()
+{
+	// create command to disarm vehicle
+	vehicle_command_s disarm_command{};
+	disarm_command.timestamp = hrt_absolute_time();
+	disarm_command.command = vehicle_command_s::VEHICLE_CMD_COMPONENT_ARM_DISARM;
+	disarm_command.param1 = vehicle_command_s::ARMING_ACTION_DISARM;
+	disarm_command.param2 = FORCE_DISARM_OVERRIDE;
+
+	// register command with current vehicle
+	_vehicle_status_sub.update(&_vehicle_status);
+	disarm_command.source_system = _vehicle_status.system_id;
+	disarm_command.target_system = _vehicle_status.system_id;
+	disarm_command.source_component = _vehicle_status.component_id;
+	disarm_command.target_component = _vehicle_status.component_id;
+
+	return _vehicle_command_pub.publish(disarm_command);
 }
 
 int VTOL_Takeoff_Safety_Override::task_spawn(int argc, char *argv[])

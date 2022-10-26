@@ -55,14 +55,17 @@
 #include <px4_platform_common/module.h>
 #include <px4_platform_common/module_params.h>
 
+#include <uORB/Publication.hpp>
 #include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionCallback.hpp>
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/takeoff_status.h>
 #include <uORB/topics/vehicle_angular_velocity.h>
 #include <uORB/topics/vehicle_attitude.h>
+#include <uORB/topics/vehicle_command.h>
 #include <uORB/topics/vehicle_control_mode.h>
 #include <uORB/topics/vehicle_local_position.h>
+#include <uORB/topics/vehicle_status.h>
 
 using matrix::Eulerf;
 using matrix::Quatf;
@@ -74,6 +77,7 @@ using namespace time_literals;
 #define OVERRIDE_DISABLED (int)-1
 #define OVERRIDE_ENABLED_CHECK_LIMITS (int)0
 #define OVERRIDE_ENABLED_CHECK_LIMITS_AND_RATES (int)1
+#define FORCE_DISARM_OVERRIDE (float)21196.f
 
 class VTOL_Takeoff_Safety_Override: public ModuleBase<VTOL_Takeoff_Safety_Override>, public ModuleParams, public px4::WorkItem
 {
@@ -101,20 +105,24 @@ private:
 
 	orb_advert_t _mavlink_log_pub{nullptr};	// mavlink log uORB handle
 
+	uORB::Publication<vehicle_command_s> _vehicle_command_pub{ORB_ID(vehicle_command)};
+
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
 
 	uORB::Subscription _vehicle_angular_velocity_sub{ORB_ID(vehicle_angular_velocity)};
 	uORB::Subscription _vehicle_local_position_sub{ORB_ID(vehicle_local_position)};
+	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 
 	uORB::SubscriptionCallbackWorkItem _vehicle_attitude_sub{this, ORB_ID(vehicle_attitude)};
 	uORB::SubscriptionCallbackWorkItem _takeoff_status_sub{this, ORB_ID(takeoff_status)};
 	uORB::SubscriptionCallbackWorkItem _vehicle_control_mode_sub{this, ORB_ID(vehicle_control_mode)};
 
-	vehicle_attitude_s _vehicle_attitude {}; /**< vehicle attitude */
 	takeoff_status_s _takeoff_status {}; /**< takeoff status */
+	vehicle_attitude_s _vehicle_attitude {}; /**< vehicle attitude */
 	vehicle_angular_velocity_s _vehicle_angular_velocity {};	/**< vehicle angular velocity */
 	vehicle_control_mode_s _vehicle_control_mode {}; /**< vehicle control mode */
 	vehicle_local_position_s _vehicle_local_position{}; /**< vehicle local position */
+	vehicle_status_s _vehicle_status {}; /**< vehicle status */
 
 	perf_counter_t	_loop_perf; /**< loop performance counter */
 
@@ -137,4 +145,5 @@ private:
 	bool AreLimitsExceeded();
 	void AbortTakeoff();
 	void NotifyUserOfAbortedTakeoff();
+	bool SendDisarmCommand();
 };

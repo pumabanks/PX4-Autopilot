@@ -66,28 +66,44 @@ void SuperAwesomeModule::Run()
 		exit_and_cleanup();
 	}
 
+	hrt_abstime now = hrt_absolute_time();
+
+	/**
+	 * Send a message every 5 seconds
+	 */
+	if (now - _last_periodic_message > 5_s) {
+
+		// ex: calculate delta time in micro-seconds (us)
+		hrt_abstime dt_us = now - _last_periodic_message;
+
+		// ex: convert to seconds
+		float dt_s = (now - _last_periodic_message) / 1e6;
+
+		// always save timestamp for the last message sent
+		_last_periodic_message = now;
+
+		// send out a message
+		PX4_INFO("Periodic message (1/2): last call was %llu us ago (%.1f seconds)", dt_us, (double)(dt_s));
+		PX4_WARN("Periodic message (2/2): CPU load: %.2f and RAM usage: %.2f", (double)_cpuload.load, (double)_cpuload.ram_usage);
+	}
+
 	/**
 	 * if the cpuload topic has new data published
 	 * then process the new data
 	 *
 	 * this example simply warns the user if the
-	 * cpu load or ram usage is too high
+	 * cpu load is too high
 	 *
-	 * Note: this is not a good implementation b/c this will spam
-	 *  the warning message as fast as this module runs but that is
-	 *  intential to create a problem we must solve in subsequent
-	 *  examples like using the hrt_absolute_time() for measuring
-	 *  interval between events
+	 * Note: this is only marginally helpful, will
+	 *  expand or remove in future examples
 	 *
 	 */
 	if (_cpuload_sub.update(&_cpuload)) {
 
-		if (_cpuload.load > 0.85f) {
-			PX4_WARN("HIGH CPU LOAD");
-		}
+		if (_cpuload.load > 0.85f && now - _last_warning_message > 10_s) {
 
-		if (_cpuload.ram_usage > 0.85f) {
-			PX4_WARN("HIGH RAM USAGE");
+			_last_warning_message = now;
+			PX4_WARN("HIGH CPU LOAD");
 		}
 	}
 }

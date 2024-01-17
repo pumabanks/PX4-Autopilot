@@ -14,6 +14,7 @@
 #pragma once
 
 // PX4 includes
+#include <drivers/drv_hrt.h>
 #include <px4_platform_common/module.h>
 #include <px4_platform_common/module_params.h>
 #include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
@@ -63,6 +64,12 @@ private:
 	 */
 	bool     _enabled;
 	uint32_t _update_interval_ms;
+
+	/**
+	 * For measuring time since last event
+	 */
+	hrt_abstime _last_periodic_message{0};
+	hrt_abstime _last_warning_message{0};
 
 	/**
 	 * For storing subcription(s) data

@@ -42,9 +42,13 @@ public:
 	/** @see ModuleBase */
 	static int print_usage(const char *reason = nullptr);
 
+	/** @see ModuleBase */
+	int print_status() override;
+
 	bool init();
 
 private:
+	/** @see ScheduledWorkItem */
 	void Run() override;
 
 	/**

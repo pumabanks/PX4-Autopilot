@@ -70,6 +70,19 @@ void SuperAwesomeModule::Run()
 }
 
 /**
+ * CLI status feedback
+ *  - called when px4 shell command "super_awesome_module status" is used
+ */
+int SuperAwesomeModule::print_status()
+{
+	uint32_t freq = 1000_ms / _update_interval_ms;
+
+	PX4_INFO("Running at %u Hz", freq);
+
+	return PX4_OK;
+}
+
+/**
  * Create the task for this module
  */
 int SuperAwesomeModule::task_spawn(int argc, char *argv[])

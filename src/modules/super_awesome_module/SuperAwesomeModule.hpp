@@ -15,12 +15,18 @@
 
 // PX4 includes
 #include <px4_platform_common/module.h>
+#include <px4_platform_common/module_params.h>
 #include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
 
+#include <uORB/uORB.h>
+#include <uORB/SubscriptionInterval.hpp>
+#include <uORB/topics/parameter_update.h>
+
+using namespace time_literals;
 
 namespace super_awesome_module
 {
-class SuperAwesomeModule : public ModuleBase<SuperAwesomeModule>,
+class SuperAwesomeModule : public ModuleBase<SuperAwesomeModule>, public ModuleParams,
 	public px4::ScheduledWorkItem
 {
 public:
@@ -40,6 +46,29 @@ public:
 
 private:
 	void Run() override;
+
+	/**
+	 * Process parameter updates
+	 */
+	void parameters_update(bool force);
+
+	/**
+	 * For using new parameters
+	 */
+	bool     _enabled;
+	uint32_t _update_interval_ms;
+
+	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+
+	/**
+	 * Pull in access to the parameters needed
+	 * for this module
+	 */
+	DEFINE_PARAMETERS(
+		(ParamBool<px4::params::SAM_EX_ENABLE>) _param_sam_enable,
+		(ParamInt<px4::params::SAM_EX_UPDATE>)  _param_sam_update_hz
+	);
+
 };
 
 } // namespace super_awesome_module

@@ -19,7 +19,10 @@ namespace super_awesome_module
  * Class constructor
  */
 SuperAwesomeModule::SuperAwesomeModule() :
-	ScheduledWorkItem(MODULE_NAME, px4::wq_configurations::lp_default)
+	ModuleParams(nullptr),
+	ScheduledWorkItem(MODULE_NAME, px4::wq_configurations::lp_default),
+	_enabled(true),
+	_update_interval_ms(100_ms)
 {
 }
 
@@ -28,14 +31,33 @@ SuperAwesomeModule::SuperAwesomeModule() :
  */
 bool SuperAwesomeModule::init()
 {
-	ScheduleOnInterval(100_ms); // 10 Hz
-	return true;
+	parameters_update(true);
+	ScheduleOnInterval(_update_interval_ms);
+	return _enabled;
+}
+
+/**
+ * Process parameter updates
+ */
+void SuperAwesomeModule::parameters_update(bool force)
+{
+	if (_parameter_update_sub.updated() || force) {
+
+		// clear update flag
+		parameter_update_s update{};
+		_parameter_update_sub.copy(&update);
+
+		// update parameters from storage
+		updateParams();
+
+		// update module parameters
+		_enabled = _param_sam_enable.get();
+		_update_interval_ms = 1000_ms / _param_sam_update_hz.get();
+	}
 }
 
 /**
  * This is where we will add our custom functionality
- * Remember this function should get called at 10Hz
- * because that is the schedule we set for it
  */
 void SuperAwesomeModule::Run()
 {

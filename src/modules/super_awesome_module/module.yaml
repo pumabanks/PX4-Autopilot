@@ -1,0 +1,29 @@
+module_name: super_awesome_module
+
+parameters:
+    - group: Super Awesome Module
+      definitions:
+        SAM_EX_ENABLE:
+            description:
+                short: Enable the Super Awesome Module by default
+                long: |
+                    This will allow the Super Awesome Module to start
+                    automatically during system bootup if enabled
+            type: enum
+            values:
+                0: Disabled
+                1: Enabled
+            reboot_required: true
+            default: 1
+            category: Custom
+
+        SAM_EX_UPDATE:
+            description:
+                short: Update rate of the Super Awesome Module
+                long: |
+                    This will set the rate at which the main Run() gets called.
+            type: int32
+            unit: Hz
+            reboot_required: true
+            default: 10
+            category: Custom

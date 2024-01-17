@@ -1,0 +1,5 @@
+menuconfig MODULES_SUPER_AWESOME_MODULE
+	bool "super_awesome_module"
+	default y
+	---help---
+		Enable support for super awesome functions like hello-world

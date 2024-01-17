@@ -66,7 +66,30 @@ void SuperAwesomeModule::Run()
 		exit_and_cleanup();
 	}
 
-	// TO-DO: Insert custom code here
+	/**
+	 * if the cpuload topic has new data published
+	 * then process the new data
+	 *
+	 * this example simply warns the user if the
+	 * cpu load or ram usage is too high
+	 *
+	 * Note: this is not a good implementation b/c this will spam
+	 *  the warning message as fast as this module runs but that is
+	 *  intential to create a problem we must solve in subsequent
+	 *  examples like using the hrt_absolute_time() for measuring
+	 *  interval between events
+	 *
+	 */
+	if (_cpuload_sub.update(&_cpuload)) {
+
+		if (_cpuload.load > 0.85f) {
+			PX4_WARN("HIGH CPU LOAD");
+		}
+
+		if (_cpuload.ram_usage > 0.85f) {
+			PX4_WARN("HIGH RAM USAGE");
+		}
+	}
 }
 
 /**

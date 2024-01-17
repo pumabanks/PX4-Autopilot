@@ -19,8 +19,10 @@
 #include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
 
 #include <uORB/uORB.h>
+#include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionInterval.hpp>
 #include <uORB/topics/parameter_update.h>
+#include <uORB/topics/cpuload.h>
 
 using namespace time_literals;
 
@@ -62,7 +64,16 @@ private:
 	bool     _enabled;
 	uint32_t _update_interval_ms;
 
+	/**
+	 * For storing subcription(s) data
+	 */
+	cpuload_s _cpuload{};
+
+	/**
+	 * uORB Subcription(s)
+	 */
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+	uORB::Subscription         _cpuload_sub{ORB_ID(cpuload)};
 
 	/**
 	 * Pull in access to the parameters needed

@@ -564,6 +564,11 @@ unset STARTUP_TUNE
 unset VEHICLE_TYPE
 
 #
+# Lets run our rc.custom_apps script
+#
+. ${R}etc/init.d/rc.custom_apps
+
+#
 # Boot is complete, inform MAVLink app(s) that the system is now fully up and running.
 #
 mavlink boot_complete

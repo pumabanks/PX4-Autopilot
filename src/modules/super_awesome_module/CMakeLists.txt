@@ -17,4 +17,4 @@ px4_add_module(
 		SuperAwesomeModule.hpp
 	DEPENDS
 		px4_work_queue
-	)
+)

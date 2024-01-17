@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Example modules/drivers that should start for all vehicle types
+#
+
+#
+# start our example module on bootup
+#
+super_awesome_module start

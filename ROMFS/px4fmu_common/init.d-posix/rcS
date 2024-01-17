@@ -337,5 +337,10 @@ else
 fi
 . ${R}etc/init.d/rc.logging
 
+#
+# Lets start our new module
+#
+super_awesome_module start
+
 mavlink boot_complete
 replay trystart

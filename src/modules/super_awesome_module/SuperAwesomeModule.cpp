@@ -2,9 +2,7 @@
  *
  *   Copyright (c) 2023 PX4 Development Team. All rights reserved.
  *
- * Terms and license agreement that you must read through before.
- * You must copy this big 'ol thing into your file as well as a right-of
- * passage and not just for legal reasons :)
+ * Terms and license agreement copied here
  *
  * NOTE: flying can be dangerous, please code responsibly.
  *
@@ -17,18 +15,28 @@ using namespace time_literals;
 using namespace matrix;
 namespace super_awesome_module
 {
-
+/**
+ * Class constructor
+ */
 SuperAwesomeModule::SuperAwesomeModule() :
 	ScheduledWorkItem(MODULE_NAME, px4::wq_configurations::lp_default)
 {
 }
 
+/**
+ * Module initialization, returns true if successful
+ */
 bool SuperAwesomeModule::init()
 {
 	ScheduleOnInterval(100_ms); // 10 Hz
 	return true;
 }
 
+/**
+ * This is where we will add our custom functionality
+ * Remember this function should get called at 10Hz
+ * because that is the schedule we set for it
+ */
 void SuperAwesomeModule::Run()
 {
 	if (should_exit()) {
@@ -36,13 +44,12 @@ void SuperAwesomeModule::Run()
 		exit_and_cleanup();
 	}
 
-	/**
-	 * This is where we will add our custom functionality
-	 * Remember this function should get called at 10Hz
-	 * because that is the schedule we set for it
-	 */
+	// TO-DO: Insert custom code here
 }
 
+/**
+ * Create the task for this module
+ */
 int SuperAwesomeModule::task_spawn(int argc, char *argv[])
 {
 	SuperAwesomeModule *instance = new SuperAwesomeModule();
@@ -66,11 +73,17 @@ int SuperAwesomeModule::task_spawn(int argc, char *argv[])
 	return PX4_ERROR;
 }
 
+/**
+ * Allows the addition and processing of cli arguments
+ */
 int SuperAwesomeModule::custom_command(int argc, char *argv[])
 {
 	return print_usage("unknown command");
 }
 
+/**
+ * Default help message for cli when no or invalid arguments are given
+ */
 int SuperAwesomeModule::print_usage(const char *reason)
 {
 	if (reason) {
@@ -89,6 +102,9 @@ Super Awesome Module example.
 	return 0;
 }
 
+/**
+ * Make this module available for the PX4 stack
+ */
 extern "C" __EXPORT int super_awesome_module_main(int argc, char *argv[])
 {
 	return SuperAwesomeModule::main(argc, argv);

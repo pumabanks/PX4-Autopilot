@@ -22,6 +22,7 @@
 #include <uORB/uORB.h>
 #include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionInterval.hpp>
+#include <uORB/Publication.hpp>
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/cpuload.h>
 #include <uORB/topics/super_awesome_topic.h>
@@ -73,15 +74,21 @@ private:
 	hrt_abstime _last_warning_message{0};
 
 	/**
-	 * For storing subcription(s) data
+	 * For uORB topic(s)
 	 */
-	cpuload_s _cpuload{};
+	cpuload_s              _cpuload{};
+	super_awesome_topic_s  _topic_out{};
 
 	/**
 	 * uORB Subcription(s)
 	 */
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
 	uORB::Subscription         _cpuload_sub{ORB_ID(cpuload)};
+
+	/**
+	 * uORB Publication(s)
+	 */
+	uORB::Publication<super_awesome_topic_s> _topic_pub{ORB_ID(super_awesome_topic)};
 
 	/**
 	 * Pull in access to the parameters needed

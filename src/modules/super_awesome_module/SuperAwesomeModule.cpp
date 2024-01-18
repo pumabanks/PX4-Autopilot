@@ -68,6 +68,12 @@ void SuperAwesomeModule::Run()
 
 	hrt_abstime now = hrt_absolute_time();
 
+	// update values for topic being published out
+	_topic_out.timestamp = now;
+	_topic_out.enabled = _enabled;
+	_topic_out.update_hz = 1000_ms / _update_interval_ms;
+	_topic_out.update_interval_ms = _update_interval_ms;
+
 	/**
 	 * Send a message every 5 seconds
 	 */
@@ -111,7 +117,13 @@ void SuperAwesomeModule::Run()
 			_last_warning_message = now;
 			PX4_WARN("HIGH CPU LOAD");
 		}
+
+		// save warning state in topic being published out
+		_topic_out.warning_high_cpu_load = cpu_high;
 	}
+
+	// this publishes the latest topic data out
+	_topic_pub.publish(_topic_out);
 }
 
 /**
@@ -123,6 +135,8 @@ int SuperAwesomeModule::print_status()
 	uint32_t freq = 1000_ms / _update_interval_ms;
 
 	PX4_INFO("Running at %u Hz", freq);
+
+	print_message(ORB_ID(super_awesome_topic), _topic_out);
 
 	return PX4_OK;
 }

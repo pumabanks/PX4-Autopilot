@@ -100,7 +100,13 @@ void SuperAwesomeModule::Run()
 	 */
 	if (_cpuload_sub.update(&_cpuload)) {
 
-		if (_cpuload.load > 0.85f && now - _last_warning_message > 10_s) {
+		// check threshold
+		bool cpu_high = _cpuload.load > super_awesome_topic_s::HIGH_CPU_LOAD_WARNING;
+
+		// check for time elapsed between messages
+		bool time_for_message = now - _last_warning_message > super_awesome_topic_s::WARN_MESSAGE_INTERVAL_US;
+
+		if (cpu_high && time_for_message) {
 
 			_last_warning_message = now;
 			PX4_WARN("HIGH CPU LOAD");

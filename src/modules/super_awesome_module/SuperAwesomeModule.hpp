@@ -24,6 +24,7 @@
 #include <uORB/SubscriptionInterval.hpp>
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/cpuload.h>
+#include <uORB/topics/super_awesome_topic.h>
 
 using namespace time_literals;
 

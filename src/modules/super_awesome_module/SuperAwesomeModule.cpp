@@ -132,10 +132,6 @@ void SuperAwesomeModule::Run()
  */
 int SuperAwesomeModule::print_status()
 {
-	uint32_t freq = 1000_ms / _update_interval_ms;
-
-	PX4_INFO("Running at %u Hz", freq);
-
 	print_message(ORB_ID(super_awesome_topic), _topic_out);
 
 	return PX4_OK;

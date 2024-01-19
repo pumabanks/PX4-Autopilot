@@ -53,14 +53,9 @@ void LoggedTopics::add_default_topics()
 	add_optional_topic("autotune_attitude_control_status", 100);
 	add_optional_topic("camera_capture");
 	add_optional_topic("camera_trigger");
-	add_topic("cellular_status", 200);
 	add_topic("commander_state");
-	add_topic("config_overrides");
 	add_topic("cpuload");
 	add_optional_topic("differential_drive_setpoint", 100);
-	add_optional_topic("external_ins_attitude");
-	add_optional_topic("external_ins_global_position");
-	add_optional_topic("external_ins_local_position");
 	add_optional_topic("esc_status", 250);
 	add_topic("failure_detector_status", 100);
 	add_topic("failsafe_flags");
@@ -68,18 +63,14 @@ void LoggedTopics::add_default_topics()
 	add_optional_topic("follow_target_estimator", 200);
 	add_optional_topic("follow_target_status", 400);
 	add_optional_topic("flaps_setpoint", 1000);
-	add_topic("gimbal_manager_set_attitude", 500);
 	add_optional_topic("generator_status");
 	add_optional_topic("gps_dump");
 	add_optional_topic("gimbal_controls", 200);
 	add_optional_topic("gripper");
-	add_optional_topic("heater_status");
 	add_topic("home_position");
 	add_topic("hover_thrust_estimate", 100);
 	add_topic("input_rc", 500);
 	add_optional_topic("internal_combustion_engine_status", 10);
-	add_optional_topic("iridiumsbd_status", 1000);
-	add_optional_topic("irlock_report", 1000);
 	add_optional_topic("landing_gear", 200);
 	add_optional_topic("landing_gear_wheel", 100);
 	add_optional_topic("landing_target_pose", 1000);
@@ -105,7 +96,7 @@ void LoggedTopics::add_default_topics()
 	add_optional_topic("sensor_gyro_fft", 50);
 	add_topic("sensor_selection");
 	add_topic("sensors_status_imu", 200);
-	add_optional_topic("spoilers_setpoint", 1000);
+	add_topic("super_awesome_topic", 100); // will log if topic exists at 10 Hz (interval = 100 ms)
 	add_topic("system_power", 500);
 	add_optional_topic("takeoff_status", 1000);
 	add_optional_topic("tecs_status", 200);
